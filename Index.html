@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kinetik Energy — Solar Consultation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a1628;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container { width: 100%; max-width: 460px; }
+        .card {
+            background: #0f1f38;
+            border: 1px solid #1a3050;
+            border-radius: 20px;
+            padding: 24px 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .logo {
+            font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+            margin-bottom: 2px; cursor: pointer; user-select: none; display: inline-block;
+        }
+        .logo-accent { color: #f5a623; }
+        .tagline { font-size: 11px; color: #8899aa; margin-bottom: 20px; }
+        label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: #8899aa; display: block;
+            margin-bottom: 4px; margin-top: 14px;
+        }
+        input, select, textarea {
+            width: 100%; padding: 10px 12px; background: #0a1628;
+            border: 1px solid #1a3050; border-radius: 8px; color: #ffffff;
+            font-size: 13px; outline: none; font-family: inherit; transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: #f5a623; }
+        textarea { resize: vertical; min-height: 60px; }
+        .other-provider { display: none; margin-top: 6px; }
+        .other-provider.show { display: block; }
+        .btn {
+            width: 100%; padding: 12px; background: #f5a623; color: #0a1628;
+            font-weight: 700; font-size: 14px; border: none; border-radius: 10px;
+            margin-top: 20px; cursor: pointer; letter-spacing: 0.3px; transition: background 0.2s;
+        }
+        .btn:active { background: #d4891a; }
+        .btn-secondary {
+            width: 100%; padding: 12px; background: transparent; color: #8899aa;
+            font-weight: 600; font-size: 13px; border: 1px solid #1a3050;
+            border-radius: 10px; margin-top: 8px; cursor: pointer;
+        }
+        .success { display: none; text-align: center; padding: 30px 16px; }
+        .success.show { display: block; }
+        .success-icon { font-size: 40px; margin-bottom: 12px; }
+        .success h2 { font-size: 18px; margin-bottom: 6px; color: #f5a623; }
+        .success p { color: #8899aa; font-size: 13px; line-height: 1.5; }
+        .form-section { display: block; }
+        .form-section.hide { display: none; }
+
+        .lead-item {
+            background: #0a1628;
+            border: 1px solid #1a3050;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        .lead-item strong { color: #f5a623; }
+        .lead-thumb {
+            width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .lead-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .lead-actions button {
+            flex: 1;
+            padding: 5px 0;
+            font-size: 10px;
+            font-weight: 600;
+            border: 1px solid #1a3050;
+            border-radius: 6px;
+            background: transparent;
+            color: #8899aa;
+            cursor: pointer;
+        }
+        .lead-actions button.copy-btn { color: #f5a623; border-color: #f5a62344; }
+        .lead-actions button.delete-btn { color: #cc3333; border-color: #cc333344; }
+
+        .clear-btn {
+            width: 100%; padding: 8px; background: transparent; color: #cc3333;
+            font-weight: 600; font-size: 11px; border: 1px solid #cc333344;
+            border-radius: 8px; margin-top: 8px; cursor: pointer;
+        }
+        .back-btn {
+            width: 100%; padding: 8px; background: transparent; color: #8899aa;
+            font-weight: 600; font-size: 11px; border: 1px solid #1a3050;
+            border-radius: 8px; margin-bottom: 10px; cursor: pointer;
+        }
+        .leads-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .leads-count { font-size: 11px; color: #8899aa; }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+
+        <!-- FORM VIEW -->
+        <div class="card form-section" id="formSection">
+            <div class="logo" id="secretLogo">Kinetik <span class="logo-accent">Energy</span></div>
+            <p class="tagline" id="formTagline">Solar consultation — Let's get you powered by the sun.</p>
+
+            <input type="hidden" id="editIndex" value="-1">
+
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="Your full name" autocomplete="off">
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="Your phone number" autocomplete="off">
+
+            <label for="address">Address</label>
+            <input type="text" id="address" placeholder="Street address, city, ZIP" autocomplete="off">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="you@example.com" autocomplete="off">
+
+            <label for="provider">Provider</label>
+            <select id="provider">
+                <option value="">— Select —</option>
+                <option value="SCE">SCE</option>
+                <option value="LADWP">LADWP</option>
+                <option value="Other">Other</option>
+            </select>
+            <div class="other-provider" id="otherProviderBox">
+                <input type="text" id="otherProvider" placeholder="Type your provider name">
+            </div>
+
+            <label for="billUpload">Upload Utility Bill</label>
+            <input type="file" id="billUpload" accept="image/*" style="padding:8px 10px;">
+
+            <label for="apptDate">Appointment Date</label>
+            <input type="text" id="apptDate" placeholder="e.g. Monday, July 22" autocomplete="off">
+
+            <label for="apptTime">Appointment Time</label>
+            <input type="text" id="apptTime" placeholder="e.g. 2:00 PM" autocomplete="off">
+
+            <label for="notes">Notes</label>
+            <textarea id="notes" placeholder="Any additional info..."></textarea>
+
+            <button class="btn" id="submitBtn" onclick="submitLead()">Schedule Consultation</button>
+            <button class="btn-secondary" id="cancelEditBtn" style="display:none;" onclick="cancelEdit()">Cancel Edit</button>
+        </div>
+
+        <!-- SUCCESS VIEW -->
+        <div class="card success" id="successSection">
+            <div class="success-icon">☀️</div>
+            <h2>Thank you!</h2>
+            <p id="successMessage"></p>
+        </div>
+
+        <!-- LEAD LIST VIEW -->
+        <div class="card" id="leadsSection" style="display:none;max-width:600px;margin:0 auto;">
+            <button class="back-btn" onclick="hideLeads()">← Back to Form</button>
+            <div class="leads-header">
+                <div class="logo">Kinetik <span class="logo-accent">Energy</span></div>
+                <div class="leads-count" id="leadsCount"></div>
+            </div>
+            <div id="leadList"></div>
+            <button class="clear-btn" onclick="clearAllLeads()">Clear All Leads</button>
+        </div>
+    </div>
+
+    <script>
+        const LEADS_PIN = '0829';
+
+        let logoTapCount = 0;
+        let logoTapTimer = null;
+
+        document.getElementById('secretLogo').addEventListener('click', function() {
+            logoTapCount++;
+            if (logoTapTimer) clearTimeout(logoTapTimer);
+            if (logoTapCount >= 5) {
+                logoTapCount = 0;
+                const pin = prompt('Enter PIN to view leads:');
+                if (pin !== LEADS_PIN) { alert('Incorrect PIN.'); return; }
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('successSection').classList.remove('show');
+                document.getElementById('leadsSection').style.display = 'block';
+                renderLeads();
+            } else {
+                logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
+            }
+        });
+
+        function hideLeads() {
+            document.getElementById('leadsSection').style.display = 'none';
+            document.getElementById('formSection').style.display = 'block';
+        }
+
+        document.getElementById('provider').addEventListener('change', function() {
+            document.getElementById('otherProviderBox').classList.toggle('show', this.value === 'Other');
+        });
+
+        function submitLead() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const provider = document.getElementById('provider').value;
+            const otherProvider = document.getElementById('otherProvider').value.trim();
+            const billFile = document.getElementById('billUpload').files[0];
+            const apptDate = document.getElementById('apptDate').value.trim();
+            const apptTime = document.getElementById('apptTime').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            const editIndex = parseInt(document.getElementById('editIndex').value);
+
+            if (!fullName) { alert('Please enter your name.'); return; }
+            const finalProvider = provider === 'Other' ? otherProvider : provider;
+
+            function buildAndSave(billImage) {
+                const lead = { fullName, phone, address, email, provider: finalProvider, billImage: billImage || null, apptDate, apptTime, notes, timestamp: new Date().toISOString() };
+                let leads = [];
+                try { const s = localStorage.getItem('kinetik_leads'); if (s) leads = JSON.parse(s); } catch(e) {}
+
+                if (editIndex >= 0 && editIndex < leads.length) {
+                    lead.billImage = lead.billImage || leads[editIndex].billImage;
+                    leads[editIndex] = lead;
+                    document.getElementById('editIndex').value = '-1';
+                    document.getElementById('submitBtn').textContent = 'Schedule Consultation';
+                    document.getElementById('cancelEditBtn').style.display = 'none';
+                    document.getElementById('formTagline').textContent = 'Solar consultation — Let\'s get you powered by the sun.';
+                } else {
+                    leads.push(lead);
+                }
+
+                localStorage.setItem('kinetik_leads', JSON.stringify(leads));
+                document.getElementById('successMessage').textContent = `We have confirmed your appointment for ${apptDate || 'your scheduled date'} at ${apptTime || 'your scheduled time'}. A Kinetik Energy representative will be in touch shortly.`;
+                document.getElementById('formSection').classList.add('hide');
+                document.getElementById('successSection').classList.add('show');
+                clearForm();
+            }
+
+            if (billFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) { buildAndSave(e.target.result); };
+                reader.readAsDataURL(billFile);
+            } else {
+                let existingImage = null;
+                if (editIndex >= 0) {
+                    let leads = [];
+                    try { leads = JSON.parse(localStorage.getItem('kinetik_leads') || '[]'); } catch(e) {}
+                    if (leads[editIndex]) existingImage = leads[editIndex].billImage;
+                }
+                buildAndSave(existingImage);
+            }
+        }
+
+        function cancelEdit() {
+            document.getElementById('editIndex').value = '-1';
+            document.getElementById('submitBtn').textContent = 'Schedule Consultation';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('formTagline').textContent = 'Solar consultation — Let\'s get you powered by the sun.';
+            clearForm();
+        }
+
+        function clearForm() {
+            document.getElementById('fullName').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('provider').value = '';
+            document.getElementById('otherProvider').value = '';
+            document.getElementById('otherProviderBox').classList.remove('show');
+            document.getElementById('billUpload').value = '';
+            document.getElementById('apptDate').value = '';
+            document.getElementById('apptTime').value = '';
+            document.getElementById('notes').value = '';
+        }
+
+        function renderLeads() {
+            let leads = [];
+            try { leads = JSON.parse(localStorage.getItem('kinetik_leads') || '[]'); } catch(e) {}
+            const list = document.getElementById('leadList');
+            document.getElementById('leadsCount').textContent = `${leads.length} lead${leads.length !== 1 ? 's' : ''}`;
+            if (leads.length === 0) {
+                list.innerHTML = '<p style="color:#8899aa;text-align:center;padding:20px;font-size:12px;">No leads yet.</p>';
+                return;
+            }
+            let html = '';
+            leads.forEach((lead, i) => {
+                html += '<div class="lead-item">';
+                if (lead.billImage) {
+                    html += `<img src="${lead.billImage}" class="lead-thumb" alt="Bill">`;
+                }
+                html += `<strong>${lead.fullName || '—'}</strong><br>`;
+                html += `📞 ${lead.phone || '—'}<br>`;
+                html += `📧 ${lead.email || '—'}<br>`;
+                html += `🏠 ${lead.address || '—'}<br>`;
+                html += `⚡ ${lead.provider || '—'} · ⏰ ${lead.apptDate || '—'} ${lead.apptTime || ''}<br>`;
+                if (lead.notes) html += `<span style="color:#8899aa;">📝 ${lead.notes}</span>`;
+                html += `<div class="lead-actions">`;
+                html += `<button class="copy-btn" onclick="copyLead(${i})">📋 Copy</button>`;
+                html += `<button class="copy-btn" onclick="editLead(${i})">✏️ Edit</button>`;
+                html += `<button class="delete-btn" onclick="deleteLead(${i})">✕ Delete</button>`;
+                html += '</div></div>';
+            });
+            list.innerHTML = html;
+        }
+
+        function copyLead(index) {
+            let leads = [];
+            try { leads = JSON.parse(localStorage.getItem('kinetik_leads') || '[]'); } catch(e) {}
+            const lead = leads[index];
+            if (!lead) return;
+
+            let text = '';
+            text += `${lead.fullName || ''}\n`;
+            text += `📞 ${lead.phone || ''}\n`;
+            text += `📧 ${lead.email || ''}\n`;
+            text += `🏠 ${lead.address || ''}\n`;
+            text += `⚡ ${lead.provider || '—'}\n`;
+            text += `⏰ ${lead.apptDate || '—'} at ${lead.apptTime || '—'}\n`;
+            if (lead.notes) text += `📝 ${lead.notes}\n`;
+
+            navigator.clipboard.writeText(text).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            });
+        }
+
+        function editLead(index) {
+            let leads = [];
+            try { leads = JSON.parse(localStorage.getItem('kinetik_leads') || '[]'); } catch(e) {}
+            const lead = leads[index];
+            if (!lead) return;
+
+            document.getElementById('editIndex').value = index;
+            document.getElementById('fullName').value = lead.fullName || '';
+            document.getElementById('phone').value = lead.phone || '';
+            document.getElementById('address').value = lead.address || '';
+            document.getElementById('email').value = lead.email || '';
+            document.getElementById('provider').value = (lead.provider === 'SCE' || lead.provider === 'LADWP') ? lead.provider : 'Other';
+            if (lead.provider !== 'SCE' && lead.provider !== 'LADWP' && lead.provider) {
+                document.getElementById('otherProvider').value = lead.provider;
+                document.getElementById('otherProviderBox').classList.add('show');
+            } else {
+                document.getElementById('otherProvider').value = '';
+                document.getElementById('otherProviderBox').classList.remove('show');
+            }
+            document.getElementById('apptDate').value = lead.apptDate || '';
+            document.getElementById('apptTime').value = lead.apptTime || '';
+            document.getElementById('notes').value = lead.notes || '';
+            document.getElementById('submitBtn').textContent = 'Save Changes';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+            document.getElementById('formTagline').textContent = 'Editing lead — Save changes or cancel.';
+
+            document.getElementById('leadsSection').style.display = 'none';
+            document.getElementById('successSection').classList.remove('show');
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('formSection').classList.remove('hide');
+            window.scrollTo(0, 0);
+        }
+
+        function deleteLead(index) {
+            if (!confirm('Delete this lead?')) return;
+            let leads = [];
+            try { leads = JSON.parse(localStorage.getItem('kinetik_leads') || '[]'); } catch(e) {}
+            leads.splice(index, 1);
+            localStorage.setItem('kinetik_leads', JSON.stringify(leads));
+            renderLeads();
+        }
+
+        function clearAllLeads() {
+            if (confirm('Delete ALL leads? This cannot be undone.')) {
+                localStorage.removeItem('kinetik_leads');
+                renderLeads();
+            }
+        }
+    </script>
+</body>
+  </html>
